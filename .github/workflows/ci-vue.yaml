@@ -10,8 +10,10 @@ env:
   IMAGE: ghcr.io/nadav602/todolist-vue
 
 jobs:
-  build-and-push:
+  build-scan-push:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.value }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +47,11 @@ jobs:
       - name: Push image
         run: docker push ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
 
+  deploy:
+    needs: build-scan-push
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
       - name: Install yq
         run: |
           wget https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 -O /usr/local/bin/yq
@@ -52,7 +59,7 @@ jobs:
 
       - name: Update k8s repo
         run: |
-          TAG=${{ steps.tag.outputs.value }}
+          TAG=${{ needs.build-scan-push.outputs.tag }}
           git clone https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/nadav602/k8s.git
           cd k8s
           yq e ".vue.image.tag = \"${TAG}\"" -i todolist-chart/values.yaml
