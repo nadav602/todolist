@@ -34,7 +34,9 @@ jobs:
           tags: ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
 
       - name: Install yq
-        uses: mikefarah/yq/.github/actions/install@master
+        run: |
+          wget https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
 
       - name: Update k8s repo
         run: |
