@@ -1,0 +1,49 @@
+name: CI - todolist-vue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'todolist-vue/**'
+
+env:
+  IMAGE: ghcr.io/nadav602/todolist-vue
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: tag
+        run: echo "value=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: nadav602
+          password: ${{ secrets.PAT_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./todolist-vue
+          push: true
+          tags: ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
+
+      - name: Install yq
+        uses: mikefarah/yq/.github/actions/install@master
+
+      - name: Update k8s repo
+        run: |
+          TAG=${{ steps.tag.outputs.value }}
+          git clone https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/nadav602/k8s.git
+          cd k8s
+          yq e ".vue.image.tag = \"${TAG}\"" -i todolist-chart/values.yaml
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add todolist-chart/values.yaml
+          git commit -m "ci: update todolist-vue image tag to ${TAG}"
+          git push

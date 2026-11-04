@@ -1,0 +1,21 @@
+{
+  "name": "@todolist-vue",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal Vue 3 + Vite frontend for the TodoList REST API",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5173",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "axios": "^1.7.0",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-vue": "^5.0.0"
+  }
+}
