@@ -1,5 +1,5 @@
 # Multi-stage build for Go todos API
-FROM golang:1.21 AS builder
+FROM golang:1.24 AS builder
 WORKDIR /src
 COPY . .
 RUN go mod tidy

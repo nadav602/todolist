@@ -1,10 +1,10 @@
 module todosapi
 
-go 1.21
+go 1.24
 
 require (
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/gofiber/fiber/v2 v2.52.10
+	github.com/gofiber/fiber/v2 v2.52.11
 )
 
 require (
