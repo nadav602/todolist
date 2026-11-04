@@ -92,6 +92,7 @@ func main() {
 			log.Error("Failed to initialize schema", "error", err)
 			os.Exit(1)
 		}
+		os.Exit(0)
 	}
 
 	// Create Fiber app
