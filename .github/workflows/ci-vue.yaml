@@ -26,12 +26,24 @@ jobs:
           username: nadav602
           password: ${{ secrets.PAT_TOKEN }}
 
-      - name: Build and push
+      - name: Build image (no push yet)
         uses: docker/build-push-action@v5
         with:
           context: ./todolist-vue
-          push: true
+          load: true
+          push: false
           tags: ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
+          format: table
+          exit-code: 1
+          severity: CRITICAL
+
+      - name: Push image
+        run: docker push ${{ env.IMAGE }}:${{ steps.tag.outputs.value }}
 
       - name: Install yq
         run: |
