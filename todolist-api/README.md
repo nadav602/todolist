@@ -147,3 +147,4 @@ make build-push VERSION=1.10 PREFIX=docker.io/myuser
   - If not provided on CLI, uses `CONTAINER_REGISTRY` env var if set
   - If env var not set, prompts interactively: `Enter registry prefix [default]:`
   - Example: `ghcr.io/bennyro-mta`, `docker.io/myuser`, `localhost:5000`
+# test
